@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Restaurant</string>
+    <string name="loading_img">Loading image</string>
+    <string name="fetching_restaurants">Fetching restaurants...</string>
 </resources>

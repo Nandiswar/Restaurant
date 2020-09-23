@@ -1,6 +1,7 @@
 package com.example.restaurant.di.home;
 
 import com.example.restaurant.network.home.HomeApi;
+import com.example.restaurant.ui.MainViewModel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,5 +18,10 @@ public class HomeModule {
     @Provides
     HomeApi provideHomeApi(Retrofit retrofit) {
         return retrofit.create(HomeApi.class);
+    }
+
+    @Provides
+    MainViewModel provideMainViewModel(HomeApi homeApi) {
+        return new MainViewModel(homeApi);
     }
 }

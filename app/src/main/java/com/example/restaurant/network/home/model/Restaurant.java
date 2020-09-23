@@ -1,5 +1,7 @@
 package com.example.restaurant.network.home.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Restaurant {
     int id;
     boolean is_time_surging;
@@ -8,8 +10,10 @@ public class Restaurant {
     String status;
     int number_of_ratings;
     String[] tags;
-    String cover_img_url;
-    String header_img_url;
+    @SerializedName("cover_img_url")
+    String coverImgUrl;
+    @SerializedName("header_img_url")
+    String headerImgUrl;
     long delivery_fee;
 
     public int getId() {
@@ -68,20 +72,20 @@ public class Restaurant {
         this.tags = tags;
     }
 
-    public String getCover_img_url() {
-        return cover_img_url;
+    public String getCoverImgUrl() {
+        return coverImgUrl;
     }
 
-    public void setCover_img_url(String cover_img_url) {
-        this.cover_img_url = cover_img_url;
+    public void setCoverImgUrl(String coverImgUrl) {
+        this.coverImgUrl = coverImgUrl;
     }
 
-    public String getHeader_img_url() {
-        return header_img_url;
+    public String getHeaderImgUrl() {
+        return headerImgUrl;
     }
 
-    public void setHeader_img_url(String header_img_url) {
-        this.header_img_url = header_img_url;
+    public void setHeaderImgUrl(String headerImgUrl) {
+        this.headerImgUrl = headerImgUrl;
     }
 
     public long getDelivery_fee() {

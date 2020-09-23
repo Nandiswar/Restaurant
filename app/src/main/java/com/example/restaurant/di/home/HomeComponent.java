@@ -1,5 +1,6 @@
 package com.example.restaurant.di.home;
 
+import com.example.restaurant.ui.DisplayRestaurantsFragment;
 import com.example.restaurant.ui.MainActivity;
 
 import dagger.Subcomponent;
@@ -20,4 +21,6 @@ public interface HomeComponent {
      * fields that MainActivity is injecting.
      */
     void inject(MainActivity mainActivity);
+
+    void inject(DisplayRestaurantsFragment displayRestaurantsFragment);
 }
