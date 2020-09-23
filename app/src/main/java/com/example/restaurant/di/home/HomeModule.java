@@ -1,5 +1,7 @@
 package com.example.restaurant.di.home;
 
+import com.example.restaurant.network.home.HomeApi;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;

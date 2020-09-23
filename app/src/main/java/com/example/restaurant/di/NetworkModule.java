@@ -1,5 +1,7 @@
 package com.example.restaurant.di;
 
+import com.example.restaurant.network.NetworkConstants;
+
 import javax.inject.Singleton;
 
 import dagger.Module;

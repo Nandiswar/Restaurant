@@ -1,5 +1,8 @@
-package com.example.restaurant.di.home;
+package com.example.restaurant.network.home;
 
+import com.example.restaurant.network.home.model.Restaurant;
+
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -18,5 +21,5 @@ public interface HomeApi {
      * @return {@link Call} list of restaurants if api is success.
      */
     @GET("/v2/restaurant/")
-    Call getRestaurants(@QueryMap Map<String, String> queryParams);
+    Call<List<Restaurant>> getRestaurants(@QueryMap Map<String, String> queryParams);
 }
