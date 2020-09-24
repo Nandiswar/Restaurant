@@ -16,6 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.annotations.Nullable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,10 +31,23 @@ import static com.example.restaurant.AppConstants.DOOR_DASH_HQ;
 public class MainViewModel extends ViewModel {
     private final HomeApi homeApi;
 
-    private MediatorLiveData<Resource<List<RestaurantWrapper>>> restaurantsLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<Resource<List<RestaurantWrapper>>> restaurantsLiveData;
 
     public MainViewModel(HomeApi homeApi) {
         this.homeApi = homeApi;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+    }
+
+    public LiveData<Resource<List<RestaurantWrapper>>> fetchRestaurantsV2() {
+        if (restaurantsLiveData == null) {
+            restaurantsLiveData = new MediatorLiveData<>();
+            fetchRestaurants();
+        }
+        return restaurantsLiveData;
     }
 
     public LiveData<Resource<List<RestaurantWrapper>>> fetchRestaurants() {
@@ -39,30 +57,64 @@ public class MainViewModel extends ViewModel {
         GetRestaurantsRequest req = new GetRestaurantsRequest(DOOR_DASH_HQ);
         Map<String, String> queryParams = getDefaultQueryParams(req);
 
-        homeApi.getRestaurants(queryParams).enqueue(new Callback<List<Restaurant>>() {
-            @Override
-            public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
-                Log.d(DEBUG_TAG, "Fetch restaurants success ");
-                if (response.code() == 200 && response.body() != null) {
-                    List<RestaurantWrapper> restaurantWrapperList = transformedResponse(response.body());
-                    restaurantsLiveData.postValue(Resource.success(restaurantWrapperList));
-                    return;
-                }
-
-                restaurantsLiveData.postValue(Resource.success(null));
-            }
-
-            @Override
-            public void onFailure(Call<List<Restaurant>> call, Throwable t) {
-                Log.d(DEBUG_TAG, "Error fetching restaurants");
-                restaurantsLiveData.postValue(Resource.error("Error fetching restaurants...", null));
-            }
-        });
+        homeApi.getRestaurantsV2(queryParams)
+                .map(resp -> {
+                  restaurantsLiveData.postValue(handleRespoonse(resp));
+                    return null;
+                })
+                .subscribe();
 
         return restaurantsLiveData;
+
+//        homeApi.getRestaurants(queryParams).enqueue(new Callback<List<Restaurant>>() {
+//            @Override
+//            public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
+//                Log.d(DEBUG_TAG, "Fetch restaurants success ");
+//                if (response.code() == 200 && response.body() != null) {
+//                    List<RestaurantWrapper> restaurantWrapperList = transformedResponse(response.body());
+//                    restaurantsLiveData.postValue(Resource.success(restaurantWrapperList));
+//                    return;
+//                }
+//
+//                restaurantsLiveData.postValue(Resource.success(null));
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Restaurant>> call, Throwable t) {
+//                Log.d(DEBUG_TAG, "Error fetching restaurants");
+//                restaurantsLiveData.postValue(Resource.error("Error fetching restaurants...", null));
+//            }
+//        });
     }
 
-    private List<RestaurantWrapper> transformedResponse(List<Restaurant> response) {
+    private Resource<List<RestaurantWrapper>> handleRespoonse(Response<List<Restaurant>> response) {
+        Log.d(DEBUG_TAG, "Fetch restaurants success ");
+        if (response.code() == 200 && response.body() != null) {
+            List<RestaurantWrapper> restaurantWrapperList = transformedResponse(response.body());
+            return Resource.success(restaurantWrapperList);
+        }
+
+        return Resource.success(null);
+    }
+
+    private void handleRespoonse(List<Restaurant> restaurants) {
+        Log.d(DEBUG_TAG, "Fetch restaurants success ");
+//        if (response.code() == 200 && response.body() != null) {
+//            List<RestaurantWrapper> restaurantWrapperList = transformedResponse(response.body());
+//            restaurantsLiveData.postValue(Resource.success(restaurantWrapperList));
+//            return;
+//        }
+
+        restaurantsLiveData.postValue(Resource.success(null));
+    }
+
+    private List<Restaurant> handleError(Throwable throwable) {
+        Log.d(DEBUG_TAG, "Error fetching restaurants");
+//        restaurantsLiveData.postValue(Resource.error("Error fetching restaurants...", null));
+        return null;
+    }
+
+    private List<RestaurantWrapper> transformedResponse(@Nullable List<Restaurant> response) {
         List<RestaurantWrapper> restaurantWrapperList = new ArrayList<>();
         for (Restaurant restaurant : response) {
             restaurantWrapperList.add(getRestaurantWrapper(restaurant));

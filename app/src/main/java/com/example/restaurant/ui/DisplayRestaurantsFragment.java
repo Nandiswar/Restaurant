@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.restaurant.R;
+import com.example.restaurant.network.home.HomeApi;
 import com.example.restaurant.util.Resource;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import static com.example.restaurant.AppConstants.DEBUG_TAG;
 public class DisplayRestaurantsFragment extends Fragment {
 
     @Inject
-    MainViewModel mainViewModel;
+    HomeApi homeApi;
 
     @Nullable
     @Override
@@ -43,8 +45,9 @@ public class DisplayRestaurantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mainViewModel.fetchRestaurants().observe(getViewLifecycleOwner(), this::handleData);
+        MainViewModelFactory factory = new MainViewModelFactory(homeApi);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), factory).get(MainViewModel.class);
+        mainViewModel.fetchRestaurantsV2().observe(getViewLifecycleOwner(), this::handleData);
     }
 
     private void handleData(Resource<List<RestaurantWrapper>> listResource) {

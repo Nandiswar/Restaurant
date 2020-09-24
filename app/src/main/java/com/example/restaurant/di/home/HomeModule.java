@@ -1,5 +1,10 @@
 package com.example.restaurant.di.home;
 
+import android.app.Activity;
+import android.content.Context;
+
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.restaurant.network.home.HomeApi;
 import com.example.restaurant.ui.MainViewModel;
 
@@ -20,8 +25,8 @@ public class HomeModule {
         return retrofit.create(HomeApi.class);
     }
 
-    @Provides
-    MainViewModel provideMainViewModel(HomeApi homeApi) {
-        return new MainViewModel(homeApi);
-    }
+//    @Provides
+//    MainViewModel provideMainViewModel(HomeApi homeApi, Activity activity) {
+//        return new ViewModelProvider(activity).get(MainViewModel.class);
+//    }
 }

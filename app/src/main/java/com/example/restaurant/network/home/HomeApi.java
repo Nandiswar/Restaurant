@@ -5,7 +5,9 @@ import com.example.restaurant.network.home.model.Restaurant;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.rxjava3.core.Flowable;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 
@@ -22,4 +24,7 @@ public interface HomeApi {
      */
     @GET("/v2/restaurant/")
     Call<List<Restaurant>> getRestaurants(@QueryMap Map<String, String> queryParams);
+
+    @GET("/v2/restaurant/")
+    Flowable<Response<List<Restaurant>>> getRestaurantsV2(@QueryMap Map<String, String> queryParams);
 }
