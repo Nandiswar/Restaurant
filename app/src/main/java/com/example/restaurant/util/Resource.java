@@ -3,6 +3,12 @@ package com.example.restaurant.util;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * This class can be used to translate the api response into {@link Resource} with
+ * meaningful status to help define user experience.
+ *
+ * @param <T> type of the {@link Resource}.
+ */
 public class Resource<T> {
     @NonNull
     public final Status status;
