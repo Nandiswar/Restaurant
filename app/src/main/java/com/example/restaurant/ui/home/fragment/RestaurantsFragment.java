@@ -72,8 +72,6 @@ public class RestaurantsFragment extends Fragment implements RestaurantsAdapter.
         // subscribe for restaurants data and display to the user
         viewModel.restaurantsResource()
                 .observe(getViewLifecycleOwner(), this::handleData);
-
-        Log.d(DEBUG_TAG, "view model in restaurants: " + viewModel);
     }
 
     @Override
