@@ -28,71 +28,58 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    // Default Android Libs
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.google.android.material:material:1.2.1'
+
+    // Material Design Layout
+    def material_version = "1.2.1"
+    implementation "com.google.android.material:material:$material_version"
 
     // ViewModel
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
-    // optional - ReactiveStreams support for LiveData
-    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version"
 
     // Dagger
-    def daggerVersion = "2.28.3"
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    def dagger_version = "2.28.3"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
 
     // Retrofit
-    def retrofitVersion = "2.6.2"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    def retrofit_version = "2.6.2"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
 
     // Rxjava
-    def rxjavaVersion = "2.2.19"
-    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    def rxjava_version = "2.2.19"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
     // Rx-Retrofit Call Adapter
-    def rxcalladapterVersion = '2.5.0'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$rxcalladapterVersion"
+    def rxcall_adapter_version = '2.5.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rxcall_adapter_version"
 
     // Picasso for loading images from url
     def picasso_version = "2.71828"
     implementation "com.squareup.picasso:picasso:$picasso_version"
 
-//    // LiveData
-//    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-//
-//    // Reactive Streams (convert Observable to LiveData)
-//    def reactivestreams_version = "1.1.1"
-//    implementation "android.arch.lifecycle:reactivestreams:$reactivestreams_version"
-
     // Gson Converter Factory
-    def gsonConverterVersion = "2.6.2"
-    implementation "com.squareup.retrofit2:converter-gson:$gsonConverterVersion"
+    def gson_converter_version = "2.6.2"
+    implementation "com.squareup.retrofit2:converter-gson:$gson_converter_version"
 
     // Autovalue
-    def autoValueVersion = "1.6.2";
-    implementation "com.google.auto.value:auto-value-annotations:$autoValueVersion"
-    annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
-
-    // testing dependencies
-
-    // junit
-    testImplementation 'junit:junit:4.12'
-
-    // RxAndroid
-    def rx_android_version = '2.0.1'
-    implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+    def autoValue_version = "1.6.2";
+    implementation "com.google.auto.value:auto-value-annotations:$autoValue_version"
+    annotationProcessor "com.google.auto.value:auto-value:${autoValue_version}"
 
     // mockito
     def mockitoVersion = "3.5.11"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation 'android.arch.core:core-testing:1.1.1'
-    testImplementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'
 
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
