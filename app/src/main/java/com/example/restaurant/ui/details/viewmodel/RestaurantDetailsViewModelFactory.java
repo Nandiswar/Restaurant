@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.restaurant.di.network.api.details.DetailsApi;
+import com.example.restaurant.ui.details.RestaurantStream;
 
 /**
  * This class is used to provide dependencies for {@link RestaurantDetailsViewModel}.

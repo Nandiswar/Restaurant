@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
@@ -21,5 +22,5 @@ public interface HomeApi {
      * @return {@link Flowable} stream of {@link Response} objects.
      */
     @GET("/v2/restaurant/")
-    Flowable<Response<List<Restaurant>>> getRestaurants(@QueryMap Map<String, String> queryParams);
+    Observable<Response<List<Restaurant>>> getRestaurants(@QueryMap Map<String, String> queryParams);
 }

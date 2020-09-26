@@ -9,6 +9,7 @@ import com.example.restaurant.di.network.api.details.DetailsApi;
 import com.example.restaurant.di.network.api.details.model.RestaurantAddress;
 import com.example.restaurant.di.network.api.details.model.RestaurantDetail;
 import com.example.restaurant.ui.details.ProvideRestaurantDetailsHandler;
+import com.example.restaurant.ui.details.RestaurantStream;
 import com.example.restaurant.ui.details.model.RestaurantDetailWrapper;
 import com.example.restaurant.util.Resource;
 

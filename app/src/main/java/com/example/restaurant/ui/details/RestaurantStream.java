@@ -1,4 +1,4 @@
-package com.example.restaurant.ui.details.viewmodel;
+package com.example.restaurant.ui.details;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;

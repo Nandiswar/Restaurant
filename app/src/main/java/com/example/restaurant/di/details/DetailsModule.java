@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.restaurant.di.network.api.details.DetailsApi;
 import com.example.restaurant.ui.details.viewmodel.RestaurantDetailsViewModelFactory;
-import com.example.restaurant.ui.details.viewmodel.RestaurantStream;
+import com.example.restaurant.ui.details.RestaurantStream;
 
 import dagger.Module;
 import dagger.Provides;

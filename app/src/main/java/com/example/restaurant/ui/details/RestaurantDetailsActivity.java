@@ -11,7 +11,6 @@ import com.example.restaurant.BaseApplication;
 import com.example.restaurant.R;
 import com.example.restaurant.di.details.DetailsComponent;
 import com.example.restaurant.ui.details.fragment.RestaurantDetailFragment;
-import com.example.restaurant.ui.details.viewmodel.RestaurantStream;
 import com.example.restaurant.ui.home.model.RestaurantWrapper;
 
 import javax.inject.Inject;

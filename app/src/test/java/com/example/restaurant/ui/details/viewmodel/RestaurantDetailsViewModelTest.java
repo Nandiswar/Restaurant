@@ -4,11 +4,10 @@ import androidx.lifecycle.Observer;
 
 import com.example.restaurant.di.network.api.details.DetailsApi;
 import com.example.restaurant.di.network.api.details.model.RestaurantDetail;
-import com.example.restaurant.di.network.api.home.model.Restaurant;
 import com.example.restaurant.ui.BaseTest;
+import com.example.restaurant.ui.details.RestaurantStream;
 import com.example.restaurant.ui.details.model.RestaurantDetailWrapper;
 import com.example.restaurant.util.Resource;
-import com.jakewharton.rxrelay2.PublishRelay;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +17,11 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import io.reactivex.subjects.BehaviorSubject;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,35 +29,35 @@ import static org.mockito.Mockito.when;
 
 
 public class RestaurantDetailsViewModelTest extends BaseTest {
-
     private static final String TEST_RESTAURANT_NAME = "Test restaurant";
-    private static final int ID = 1;
+
+    private BehaviorSubject<Integer> restIDSubj = BehaviorSubject.create();
+    private BehaviorSubject<Response<RestaurantDetail>> restDetailsSubj = BehaviorSubject.create();
 
     @Mock
     DetailsApi detailsApi;
+    @Mock
+    RestaurantStream restaurantStream;
 
-    private PublishRelay relay;
     private RestaurantDetailsViewModel viewModel;
 
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        relay = PublishRelay.create();
+        when(restaurantStream.restaurantIDStream()).thenReturn(restIDSubj);
+
         viewModel = new RestaurantDetailsViewModel(detailsApi, restaurantStream);
     }
 
     @Test
     public void fetchRestaurants_whenHomeApiIsNull_shouldHaveObservers() {
-        Flowable flowable = relay.toFlowable(BackpressureStrategy.LATEST);
-        when(detailsApi.getRestaurantDetails(ID)).thenReturn(flowable);
-
         Observer testObserver = mock(Observer.class);
 
-        viewModel.restaurantDetailsResource(ID).observeForever(testObserver);
+        viewModel.restaurantDetailsResource().observeForever(testObserver);
 
-        assertNotNull(viewModel.restaurantDetailsResource(ID));
-        assertTrue(viewModel.restaurantDetailsResource(ID).hasObservers());
+        assertNotNull(viewModel.restaurantDetailsResource());
+        assertTrue(viewModel.restaurantDetailsResource().hasObservers());
 
         ArgumentCaptor captor = ArgumentCaptor.forClass(Resource.class);
         verify(testObserver, times(1)).onChanged(captor.capture());
@@ -68,19 +67,19 @@ public class RestaurantDetailsViewModelTest extends BaseTest {
         assertEquals(value.status, Resource.Status.LOADING);
         assertNull(value.data);
 
-        viewModel.restaurantDetailsResource(ID).removeObserver(testObserver);
+        viewModel.restaurantDetailsResource().removeObserver(testObserver);
     }
 
     @Test
     public void fetchRestaurants_whenHomeApiReturnsError_shouldEmitErrorResource() {
-        Flowable flowable = relay.toFlowable(BackpressureStrategy.LATEST);
-        when(detailsApi.getRestaurantDetails(ID)).thenReturn(flowable);
+        when(detailsApi.getRestaurantDetails(anyInt())).thenReturn(restDetailsSubj);
 
         Observer testObserver = mock(Observer.class);
-        viewModel.restaurantDetailsResource(ID).observeForever(testObserver);
+        viewModel.restaurantDetailsResource().observeForever(testObserver);
 
+        restIDSubj.onNext(1);
         ResponseBody body = mock(ResponseBody.class);
-        relay.accept(Response.error(404, body));
+        restDetailsSubj.onNext(Response.error(404, body));
 
         ArgumentCaptor captor = ArgumentCaptor.forClass(Resource.class);
         verify(testObserver, times(2)).onChanged(captor.capture());
@@ -100,19 +99,19 @@ public class RestaurantDetailsViewModelTest extends BaseTest {
         assertNull(value2.data);
         assertEquals(value2.message, "error in fetching data");
 
-        viewModel.restaurantDetailsResource(ID).removeObserver(testObserver);
+        viewModel.restaurantDetailsResource().removeObserver(testObserver);
     }
 
     @Test
     public void fetchRestaurants_whenHomeApiReturnsSuccess_shouldEmitSuccessResource() {
-        Flowable flowable = relay.toFlowable(BackpressureStrategy.LATEST);
-        when(detailsApi.getRestaurantDetails(ID)).thenReturn(flowable);
+        when(detailsApi.getRestaurantDetails(anyInt())).thenReturn(restDetailsSubj);
 
         Observer testObserver = mock(Observer.class);
-        viewModel.restaurantDetailsResource(ID).observeForever(testObserver);
+        viewModel.restaurantDetailsResource().observeForever(testObserver);
 
+        restIDSubj.onNext(1);
         RestaurantDetail body = getRestaurantDetail();
-        relay.accept(Response.success(body));
+        restDetailsSubj.onNext(Response.success(body));
 
         ArgumentCaptor captor = ArgumentCaptor.forClass(Resource.class);
         verify(testObserver, times(2)).onChanged(captor.capture());
@@ -134,16 +133,12 @@ public class RestaurantDetailsViewModelTest extends BaseTest {
         assertEquals(rest.name(), TEST_RESTAURANT_NAME);
         assertNull(rest.description());
 
-        viewModel.restaurantDetailsResource(ID).removeObserver(testObserver);
+        viewModel.restaurantDetailsResource().removeObserver(testObserver);
     }
 
     private RestaurantDetail getRestaurantDetail() {
         RestaurantDetail restaurant = new RestaurantDetail();
         restaurant.setName(TEST_RESTAURANT_NAME);
         return restaurant;
-    }
-
-    private Flowable<Response<List<Restaurant>>> getFlowable(PublishRelay<Response<List<Restaurant>>> relay) {
-        return relay.toFlowable(BackpressureStrategy.LATEST);
     }
 }
